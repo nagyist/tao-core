@@ -9660,6 +9660,8 @@ table.matrix tbody [data-edit] { width: 30px; }
 label { display: inline-block; cursor: pointer; padding-right: 10px; margin-bottom: 5px; }
 label abbr { border: none; color: #0e5d91; }
 
+.uploader .file-upload.grid-row { max-width: none; }
+
 .file-upload { display: inline-block; position: relative; overflow: hidden; max-width: 300px; }
 .file-upload .file-name { padding: 2px 5px; background: white; border: 1px solid #ddd; border-radius: 2px; -webkit-border-radius: 2px; }
 .file-upload .file-name.placeholder { font-style: italic; color: #d2d2d2; }
@@ -9739,7 +9741,7 @@ label input[type="radio"].disabled ~ [class^="icon-"], label input[type="radio"]
 .xhtml_form .property-heading-icon { margin-left: 5px; }
 .xhtml_form .property-heading-icon:hover { color: #0e5d91; }
 .xhtml_form .property-heading-label { padding-left: 5px; }
-.xhtml_form .property-heading-label:before { font-size: 12px; content: '• '; line-height: 2px; opacity: .8; }
+.xhtml_form .property-heading-label:before { font-size: 12px; content: 'тАв '; line-height: 2px; opacity: .8; }
 .xhtml_form .property-edit-container { display: none; width: 100%; }
 .xhtml_form .property-heading-toolbar { float: right; }
 .xhtml_form .property-heading-toolbar .property-parent-label { display: inline-block; padding: 0 5px; }
