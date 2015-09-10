@@ -2,11 +2,16 @@
  * @author Sam <sam@taotesting.com>
  * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
-define(['lodash', 'i18n', 'jquery'], function(_, __, $){
+define([
+    'jquery',
+    'lodash',
+    'i18n',
+    'util/url'
+], function($, _, __, urlUtil){
     'use strict';
 
     /**
-     * Defines the validation callback 
+     * Defines the validation callback
      * @callback IsValidCallback
      * @param {Boolean} isValid - wheter the value is valid or not
      */
@@ -97,44 +102,46 @@ define(['lodash', 'i18n', 'jquery'], function(_, __, $){
                 }
             }
         },
+
+
         fileExists : {
             name : 'fileExists',
             message : __('no file not found in this location'),
-            options : {baseUrl : ''},
-            validate : function(value, callback, options){
-                
-                if(!value){
-                    callback(false);
-                    return;
+
+            /**
+             * Validate check whether the file exists
+             * @param {String} value - the URL
+             * @param {Function} the isValid callback
+             */
+            validate : function(value, callback){
+                var parsed;
+                debugger;
+                if(value){
+
+                    parsed = urlUtil.parse(value);
+                    if(parsed.base64){
+                        return callback(true);
+                    }
+
+                    if(parsed && !_.isEmpty(parsed.path)){
+                        //request HEAD only for bandwidth saving
+                        $.ajax({
+                            type : 'HEAD',
+                            url : parsed.toString(),
+                            success : function(){
+                                callback(true);
+                            },
+                            error : function(){
+                                callback(false);
+                            }
+                        });
+                        return;
+                    }
                 }
-                
-                //valid way to know if it is an url
-                var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])?)\\.)+[a-z]{2,}|'+ // domain name
-                    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-                    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-                    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-                if(!pattern.test(value) && !/^data:[^\/]+\/[^;]+(;charset=[\w]+)?;base64,/.test(value)){
-                	//request HEAD only for bandwidth saving
-                    $.ajax({
-                        type : 'HEAD',
-                        url : options.baseUrl + value,
-                        success : function(){
-                            callback(true);
-                        },
-                        error : function(){
-                            callback(false);
-                        }
-                    });
-                
-                }else{
-                    
-                    callback(true);
-                }
-                
+                return callback(false);
             }
         },
+
         validRegex : {
             name: 'validRegex',
             message: __('invalid regular expression'),
@@ -186,7 +193,7 @@ define(['lodash', 'i18n', 'jquery'], function(_, __, $){
 
     /**
      * Gives access to the validator and enable to register new validators
-     * @exports validator/validators 
+     * @exports validator/validators
      */
     return {
         validators : validators,
