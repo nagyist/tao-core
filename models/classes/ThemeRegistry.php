@@ -246,7 +246,8 @@ class ThemeRegistry extends AbstractRegistry
                 $theme['path'] = $webUrl;
             }
             else {
-                $theme['path'] = ROOT_URL . $theme['path'] ;
+                // normalizing makes sure that whatever\\comes/in gets/out/properly
+                $theme['path'] = ROOT_URL . FsUtils::normalizePath($theme['path']) ;
 
             }
         }
@@ -267,7 +268,7 @@ class ThemeRegistry extends AbstractRegistry
         }
         else {
             // normalizing makes sure that whatever\\comes/in gets/out/properly
-            return FsUtils::normalizePath(ROOT_URL . $path);
+            return ROOT_URL . FsUtils::normalizePath($path);
         }
     }
     
